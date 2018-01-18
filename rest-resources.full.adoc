@@ -1,0 +1,340 @@
+= REST resources of Banking webapp
+1.0.0-SNAPSHOT
+
+This is brief documentation of published REST services. Use a 'application/json' accept header or responses will be in XML.
+
+== `GET api/accounts`
+
+returns 50 accounts by default, in range 1 - 500 max results
+
+=== Request
+_No body_ + 
+*Query Param*: `limit = 50`, `int {1, 500}` + 
+*Query Param*: `offset = 0`, `int {0, n}` + 
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (Collection of `milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+[
+    {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string"
+    }
+]
+----
+
+
+
+== `POST api/accounts`
+
+creates new account
+
+=== Request
+*Content-Type*: `application/xml, application/javascript` +
+*Request Body*: (`milo.banking.accounts.entities.AccountHolder`)
+
+[source,javascript]
+----
+{
+    "email": "string",
+    "name": "string"
+}
+----
+
+
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+{
+    "accountHolder": {
+        "email": "string",
+        "name": "string"
+    },
+    "balance": 0.0,
+    "createdOn": {
+    },
+    "iban": "string"
+}
+----
+
+==== `400 Bad Request`
+
+==== `404 Not Found`
+
+== `GET api/accounts/{iban}`
+
+returns account information with 50 last transfers or without transfers
+
+=== Request
+_No body_ + 
+*Path Param*: `iban`, `java.lang.String` + 
+*Query Param*: `withTransfers = false`, `boolean` + 
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+{
+    "accountHolder": {
+        "email": "string",
+        "name": "string"
+    },
+    "balance": 0.0,
+    "createdOn": {
+    },
+    "iban": "string"
+}
+----
+
+
+
+==== `404 Not Found`
+
+==== `410 Gone`
+
+== `PUT api/accounts/{iban}`
+
+updates existing account information if possible
+
+=== Request
+*Content-Type*: `application/xml, application/javascript` +
+*Request Body*: (`milo.banking.accounts.entities.AccountHolder`)
+
+[source,javascript]
+----
+{
+    "email": "string",
+    "name": "string"
+}
+----
+
+
+*Path Param*: `iban`, `java.lang.String` + 
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+{
+    "accountHolder": {
+        "email": "string",
+        "name": "string"
+    },
+    "balance": 0.0,
+    "createdOn": {
+    },
+    "iban": "string"
+}
+----
+
+==== `404 No Content - account does not exists`
+
+==== `401 No Content - account archivated`
+
+== `DELETE api/accounts/{iban}`
+
+will archivate account, all operations will be forbiden on the account including account information retrieval
+
+=== Request
+_No body_ + 
+*Path Param*: `iban`, `java.lang.String` + 
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `204 No Content`
+
+==== `404 No Content`
+
+== `GET api/accounts/{iban}/transfers`
+
+retrieves list of transfers for corresponding account by query parameters. Optionally you can filter by accounts names used in transfers or the reference. You can adjust limit and offset for pagination.
+
+=== Request
+_No body_ + 
+*Path Param*: `iban`, `java.lang.String` + 
+*Query Param*: `filter = null`, `java.lang.String` + 
+*Query Param*: `limit = 50`, `int {1, 500}` + 
+*Query Param*: `offset = 0`, `int {0, n}` + 
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (Collection of `milo.banking.transfers.dtos.TransferBasicDto`)
+
+[source,javascript]
+----
+[
+    {
+        "amount": 0.0,
+        "createdOn": "date",
+        "id": 0,
+        "receiverAccount": {
+            "accountHolder": {
+                "email": "string",
+                "name": "string"
+            },
+            "balance": 0.0,
+            "createdOn": {
+            },
+            "iban": "string"
+        },
+        "receiverIban": "string",
+        "reference": "string",
+        "senderAccount": {
+            "accountHolder": {
+                "email": "string",
+                "name": "string"
+            },
+            "balance": 0.0,
+            "createdOn": {
+            },
+            "iban": "string"
+        },
+        "senderIban": "string"
+    }
+]
+----
+
+
+
+==== `404 Not Found`
+
+==== `410 Gone`
+
+== `POST api/transfers`
+
+creates transfers if ibans are valid, there is at least 1 local account and there are sufficient funds on that account in case of sending money from it.
+
+=== Request
+*Content-Type*: `application/xml, application/javascript` +
+*Request Body*: (`milo.banking.transfers.dtos.TransferInputDto`)
+
+[source,javascript]
+----
+{
+    "amount": 0.0,
+    "receiverIban": "string",
+    "reference": "string",
+    "senderIban": "string"
+}
+----
+
+
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.transfers.dtos.TransferDto`)
+
+[source,javascript]
+----
+{
+    "amount": 0.0,
+    "createdOn": {
+    },
+    "id": 0,
+    "receiverAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string"
+    },
+    "reference": "string",
+    "senderAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string"
+    }
+}
+----
+
+==== `406 Not Acceptable` = insufficient funds
+
+==== `410 Gone` = using removed account
+
+==== `404 Not Found` = both accounts are foreign
+
+== `GET api/transfers/{id}`
+
+retrieve transfer details by transfer ID
+
+=== Request
+_No body_ + 
+*Path Param*: `id`, `java.lang.Long` + 
+
+=== Response
+*Content-Type*: `application/xml, application/javascript`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.transfers.dtos.TransferDto`)
+
+[source,javascript]
+----
+{
+    "amount": 0.0,
+    "createdOn": {
+    },
+    "id": 0,
+    "receiverAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string"
+    },
+    "reference": "string",
+    "senderAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string"
+    }
+}
+----
+
+==== `404 Not Found`
+

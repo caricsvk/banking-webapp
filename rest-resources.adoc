@@ -1,0 +1,343 @@
+= REST resources of Banking webapp
+1.0.0-SNAPSHOT
+
+== `GET api/accounts`
+
+=== Request
+_No body_ + 
+*Query Param*: `limit`, `int` + 
+*Query Param*: `offset`, `int` + 
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (Collection of `milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+[
+    {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "archived": false,
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string",
+        "remote": false,
+        "updatable": false
+    }
+]
+----
+
+
+
+== `POST api/accounts`
+
+=== Request
+*Content-Type*: `\*/*` + 
+*Request Body*: (`milo.banking.accounts.entities.AccountHolder`)
+
+[source,javascript]
+----
+{
+    "email": "string",
+    "name": "string"
+}
+----
+
+
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+{
+    "accountHolder": {
+        "email": "string",
+        "name": "string"
+    },
+    "archived": false,
+    "balance": 0.0,
+    "createdOn": {
+    },
+    "iban": "string",
+    "remote": false,
+    "updatable": false
+}
+----
+
+
+
+== `GET api/accounts/{iban}`
+
+=== Request
+_No body_ + 
+*Path Param*: `iban`, `java.lang.String` + 
+*Query Param*: `withTransfers`, `boolean` + 
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+{
+    "accountHolder": {
+        "email": "string",
+        "name": "string"
+    },
+    "archived": false,
+    "balance": 0.0,
+    "createdOn": {
+    },
+    "iban": "string",
+    "remote": false,
+    "updatable": false
+}
+----
+
+
+
+==== `404 Not Found`
+
+==== `410 Gone`
+
+== `PUT api/accounts/{iban}`
+
+=== Request
+*Content-Type*: `\*/*` + 
+*Request Body*: (`milo.banking.accounts.entities.AccountHolder`)
+
+[source,javascript]
+----
+{
+    "email": "string",
+    "name": "string"
+}
+----
+
+
+*Path Param*: `iban`, `java.lang.String` + 
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.accounts.dtos.AccountBasicDto`)
+
+[source,javascript]
+----
+{
+    "accountHolder": {
+        "email": "string",
+        "name": "string"
+    },
+    "archived": false,
+    "balance": 0.0,
+    "createdOn": {
+    },
+    "iban": "string",
+    "remote": false,
+    "updatable": false
+}
+----
+
+
+
+== `DELETE api/accounts/{iban}`
+
+=== Request
+_No body_ + 
+*Path Param*: `iban`, `java.lang.String` + 
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `204 No Content`
+
+== `GET api/accounts/{iban}/transfers`
+
+=== Request
+_No body_ + 
+*Path Param*: `iban`, `java.lang.String` + 
+*Query Param*: `filter`, `java.lang.String` + 
+*Query Param*: `limit`, `int` + 
+*Query Param*: `offset`, `int` + 
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (Collection of `milo.banking.transfers.dtos.TransferBasicDto`)
+
+[source,javascript]
+----
+[
+    {
+        "amount": 0.0,
+        "createdOn": {
+        },
+        "id": 0,
+        "receiverAccount": {
+            "accountHolder": {
+                "email": "string",
+                "name": "string"
+            },
+            "archived": false,
+            "balance": 0.0,
+            "createdOn": {
+            },
+            "iban": "string",
+            "remote": false,
+            "updatable": false
+        },
+        "receiverIban": "string",
+        "reference": "string",
+        "senderAccount": {
+            "accountHolder": {
+                "email": "string",
+                "name": "string"
+            },
+            "archived": false,
+            "balance": 0.0,
+            "createdOn": {
+            },
+            "iban": "string",
+            "remote": false,
+            "updatable": false
+        },
+        "senderIban": "string"
+    }
+]
+----
+
+
+
+==== `404 Not Found`
+
+==== `410 Gone`
+
+== `POST api/transfers`
+
+=== Request
+*Content-Type*: `\*/*` + 
+*Request Body*: (`milo.banking.transfers.dtos.TransferInputDto`)
+
+[source,javascript]
+----
+{
+    "amount": 0.0,
+    "receiverIban": "string",
+    "reference": "string",
+    "senderIban": "string"
+}
+----
+
+
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.transfers.dtos.TransferDto`)
+
+[source,javascript]
+----
+{
+    "amount": 0.0,
+    "createdOn": {
+    },
+    "id": 0,
+    "receiverAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "archived": false,
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string",
+        "remote": false,
+        "updatable": false
+    },
+    "reference": "string",
+    "senderAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "archived": false,
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string",
+        "remote": false,
+        "updatable": false
+    }
+}
+----
+
+
+
+== `GET api/transfers/{id}`
+
+=== Request
+_No body_ + 
+*Path Param*: `id`, `java.lang.Long` + 
+
+=== Response
+*Content-Type*: `\*/*`
+
+==== `200 OK`
+*Response Body*: (`milo.banking.transfers.dtos.TransferDto`)
+
+[source,javascript]
+----
+{
+    "amount": 0.0,
+    "createdOn": {
+    },
+    "id": 0,
+    "receiverAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "archived": false,
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string",
+        "remote": false,
+        "updatable": false
+    },
+    "reference": "string",
+    "senderAccount": {
+        "accountHolder": {
+            "email": "string",
+            "name": "string"
+        },
+        "archived": false,
+        "balance": 0.0,
+        "createdOn": {
+        },
+        "iban": "string",
+        "remote": false,
+        "updatable": false
+    }
+}
+----
+
+
+
