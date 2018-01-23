@@ -78,5 +78,4 @@ class TransfersSpec extends BaseSpec {
         response.status == 404
     }
 
-    // TODO test transfers
 }

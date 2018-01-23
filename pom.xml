@@ -125,7 +125,7 @@
 			</plugin>
 			<!-- generates API documentation based on JAX-RS -->
 			<plugin>
-				<!--com.sebastian-daschner:jaxrs-analyzer-maven-plugin:0.9:analyze-jaxrs-->
+				<!--com.sebastian-daschner:jaxrs-analyzer-maven-plugin:0.16:analyze-jaxrs-->
 				<groupId>com.sebastian-daschner</groupId>
 				<artifactId>jaxrs-analyzer-maven-plugin</artifactId>
 				<version>0.16</version>
@@ -136,7 +136,8 @@
 						</goals>
 						<configuration>
 							<!-- Available backends are plaintext (default), swagger and asciidoc -->
-							<backend>asciidoc</backend>
+							<backend>swagger</backend>
+							<deployedDomain>localhost:8080</deployedDomain>
 							<resourcesDir>../</resourcesDir>
 						</configuration>
 					</execution>
