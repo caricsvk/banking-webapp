@@ -34,9 +34,9 @@ public class Transfer {
 	private Long id;
 	@NotNull @Min(0)
 	private BigDecimal amount;
-	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) @NotNull
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY) @NotNull
 	private Account senderAccount;
-	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) @NotNull
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY) @NotNull
 	private Account receiverAccount;
 	protected Timestamp createdOn;
 	@Size(max = 255)

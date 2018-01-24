@@ -136,7 +136,7 @@
 						</goals>
 						<configuration>
 							<!-- Available backends are plaintext (default), swagger and asciidoc -->
-							<backend>swagger</backend>
+							<backend>asciidoc</backend>
 							<deployedDomain>localhost:8080</deployedDomain>
 							<resourcesDir>../</resourcesDir>
 						</configuration>

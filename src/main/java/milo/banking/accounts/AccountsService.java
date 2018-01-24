@@ -5,6 +5,7 @@ import milo.banking.accounts.entities.AccountHolder;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.WebApplicationException;
@@ -24,7 +25,7 @@ public class AccountsService {
 	}
 
 	public Account update(String iban, AccountHolder accountHolder) {
-		Account account = find(iban);
+		Account account = find(iban, LockModeType.OPTIMISTIC);
 		if (account == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		} else if (!account.isUpdatable()) {
@@ -35,8 +36,8 @@ public class AccountsService {
 		return account;
 	}
 
-	public Account find(String iban) {
-		return entityManager.find(Account.class, iban);
+	public Account find(String iban, LockModeType lockModeType) {
+		return entityManager.find(Account.class, iban, lockModeType);
 	}
 
 	public List<Account> getAll(int offset, int limit) {
@@ -45,7 +46,7 @@ public class AccountsService {
 	}
 
 	public void archive(String iban) {
-		Account account = find(iban);
+		Account account = find(iban, LockModeType.PESSIMISTIC_WRITE);
 		if (account == null || account.isRemote()) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
@@ -57,6 +58,7 @@ public class AccountsService {
 		Account account = new Account(iban, new AccountHolder(iban, null));
 		account.setRemote(true);
 		entityManager.persist(account);
+		entityManager.flush();
 		return account;
 	}
 

@@ -6,9 +6,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Stateless
 public class TransfersService {
@@ -17,6 +18,9 @@ public class TransfersService {
 	private EntityManager entityManager;
 
 	public Transfer send(Account senderAccount, Account receiverAccount, BigDecimal amount, String reference) {
+		this.accountsChecks(senderAccount, receiverAccount, amount);
+		senderAccount.setBalance(senderAccount.getBalance().subtract(amount));
+		receiverAccount.setBalance(receiverAccount.getBalance().add(amount));
 		Transfer transfer = new Transfer(senderAccount, receiverAccount, amount, reference);
 		entityManager.persist(transfer);
 		return transfer;
@@ -38,6 +42,22 @@ public class TransfersService {
 			namedQuery = entityManager.createNamedQuery(Transfer.SEARCH, Transfer.class);
 		}
 		return namedQuery.setParameter("iban", iban).setMaxResults(limit).setFirstResult(offset).getResultList();
+	}
+
+	private void accountsChecks(Account senderAccount, Account receiverAccount, BigDecimal amount) {
+		if (senderAccount.isArchived() || receiverAccount.isArchived()) {
+			throw new WebApplicationException(Response.Status.GONE);
+		}
+		if (senderAccount.isRemote() && receiverAccount.isRemote()) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		BigDecimal newSenderBalance = senderAccount.getBalance().subtract(amount);
+		if (!senderAccount.isRemote() && newSenderBalance.compareTo(BigDecimal.ZERO) < 0) {
+			throw new WebApplicationException(
+					"AccountsTransferService.makeTransfer failed with low balance " + senderAccount.getIban(),
+					Response.status(Response.Status.NOT_ACCEPTABLE).entity("LOW_BALANCE").build()
+			);
+		}
 	}
 
 }

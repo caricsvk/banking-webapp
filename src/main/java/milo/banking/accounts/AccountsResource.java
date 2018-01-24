@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.LockModeType;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -56,7 +57,7 @@ public class AccountsResource {
 	@GET @Path("{iban}") @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Response read(@PathParam("iban") @Iban String iban,
 						 @QueryParam("withTransfers") @DefaultValue("false") boolean withTransfers) {
-		Account account = accountsService.find(iban);
+		Account account = accountsService.find(iban, LockModeType.NONE);
 		if (account == null || account.isRemote()) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		} else if (account.isArchived()) {
@@ -79,7 +80,7 @@ public class AccountsResource {
 						 @QueryParam("filter") String filter,
 						 @QueryParam("offset") @DefaultValue("0") int offset,
 						 @QueryParam("limit") @DefaultValue("50") @Min(1) @Max(500) int limit) {
-		Account account = accountsService.find(iban);
+		Account account = accountsService.find(iban, LockModeType.NONE);
 		if (account == null || account.isRemote()) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		} else if (account.isArchived()) {

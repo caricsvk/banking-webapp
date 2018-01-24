@@ -13,8 +13,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.logging.Logger;
 
-@Startup
-@Singleton
+@Startup @Singleton
 public class StartupSingleton {
 
 	private static final Logger LOGGER = Logger.getLogger(StartupSingleton.class.getName());

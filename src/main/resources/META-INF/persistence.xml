@@ -10,10 +10,10 @@
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true"/>
 			<property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-			<property name="eclipselink.logging.level" value="FINE"/>
+			<!--<property name="eclipselink.logging.level" value="FINE"/>-->
 			<property name="javax.entities.schema-generation.create-source" value="metadata-then-script"/>
 			<property name="hibernate.hbm2ddl.auto" value="create" />
-			<property name="hibernate.show_sql" value="true" />
+			<!--<property name="hibernate.show_sql" value="true" />-->
 		</properties>
 	</persistence-unit>
 </persistence>
